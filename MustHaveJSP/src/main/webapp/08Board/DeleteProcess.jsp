@@ -4,14 +4,9 @@
 <%@ include file="./IsLoggedIn.jsp"%>
 <%
 String num = request.getParameter("num");
-System.out.println("num : " + num);
-
 BoardDAO dao = new BoardDAO(application);
 BoardDTO dto = dao.selectView(num);
-
 String sessionId = session.getAttribute("UserId").toString();
-System.out.println("sessionId : " + sessionId + "------");
-System.out.println("dto.getId() : " + dto.getId() + "------");
 int delResult = 0;
 
 if (sessionId.equals(dto.getId())) {
