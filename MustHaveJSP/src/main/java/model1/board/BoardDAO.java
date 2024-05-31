@@ -113,19 +113,39 @@ public class BoardDAO extends JDBConnect {
 
 		return dto;
 	}
-	
+
 	public void updateVisitCount(String num) {
-		String query = "UPDATE board SET "
-				+ " visitcount=visitcount+1 "
-				+ " WHERE num=? ";
-		
+		String query = "UPDATE board SET " + " visitcount=visitcount+1 " + " WHERE num=? ";
+
 		try {
 			psmt = con.prepareStatement(query);
 			psmt.setString(1, num);
 			psmt.executeQuery();
-		}catch(Exception e) {
+		} catch (Exception e) {
 			System.out.println("게시물 조회수 증가 중 예외 발생");
 			e.printStackTrace();
 		}
+	}
+
+	public int updateEdit(BoardDTO dto) {
+		int result = 0;
+		
+		try {
+			String query = "UPDATE board SET "
+					+ "title=?, content=? "
+					+ " WHERE num=? ";
+			
+			psmt = con.prepareStatement(query);
+			psmt.setString(1, dto.getTitle());
+			psmt.setString(2, dto.getContent());
+			psmt.setString(3, dto.getNum());
+			
+			result = psmt.executeUpdate();
+		}catch(Exception e) {
+			System.out.println("게시물 수정 중 예외 발생");
+			e.printStackTrace();
+		}
+		
+		return result;
 	}
 }
