@@ -21,6 +21,7 @@ dao.close();
 <html>
 <head>
 <meta charset="UTF-8">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 <title>회원제 게시판</title>
 </head>
 <body>
@@ -74,7 +75,9 @@ if(boardLists.isEmpty()) {
 		</table>
 		<table border="1" width="90%">
 			<tr align="right">
-				<td><button type="button" onclick="location.href='Write.jsp';">글쓰기</button></td>
+				<td>
+					<button type="button" class="btn btn-danger" onclick="location.href='Write.jsp';">글쓰기</button>
+				</td>
 			</tr>
 		</table>
 	</body>
