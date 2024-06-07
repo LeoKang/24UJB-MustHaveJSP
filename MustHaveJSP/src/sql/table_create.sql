@@ -6,3 +6,16 @@ CREATE TABLE myfile (
 	sfile  varchar2(30) NOT NULL,
 	postdate  DATE DEFAULT sysdate NOT NULL
 )
+
+CREATE TABLE mvcboard (
+	idx NUMBER PRIMARY KEY,
+	name varchar2(50) NOT NULL,
+	title varchar2(200) NOT NULL,
+	content varchar2(2000) NOT NULL,
+	postdate DATE DEFAULT sysdate NOT NULL,
+	ofile varchar2(200),
+	sfile varchar2(30),
+	downcount number(5) DEFAULT 0 NOT NULL,
+	pass varchar2(50) NOT NULL,
+	visitcount NUMBER DEFAULT 0 NOT NULL
+)
