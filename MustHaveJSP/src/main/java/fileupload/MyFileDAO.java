@@ -13,7 +13,7 @@ public class MyFileDAO extends DBConnPool {
 			String query = "INSERT INTO myfile ( "
 					+ " idx, title, cate, ofile, sfile) "
 					+ " VALUES ( "
-					+ " seq_board_num.nextval,?,?,?,?)" ;
+					+ " seq_board_num.nextval,?,?,?,?)";
 			
 			psmt = con.prepareStatement(query);
 			psmt.setString(1, dto.getTitle());
@@ -26,6 +26,7 @@ public class MyFileDAO extends DBConnPool {
 			System.out.println("INSERT 중 예외 발생");
 			e.printStackTrace();
 		}
+		
 		return applyResult;
 	}
 	
@@ -47,14 +48,13 @@ public class MyFileDAO extends DBConnPool {
 				dto.setSfile(rs.getString(5));
 				dto.setPostdate(rs.getString(6));
 				
-				
 				fileList.add(dto);
 			}
 		}catch(Exception e) {
 			System.out.println("SELECT 시 예외 발생");
 			e.printStackTrace();
 		}
+		
 		return fileList;
 	}
-
 }
