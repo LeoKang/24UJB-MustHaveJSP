@@ -144,12 +144,22 @@
 		<servlet-name>WriteController</servlet-name>
 		<servlet-class>model2.mvcboard.WriteController</servlet-class>
 		<multipart-config>
-			<max-file-size>1048576</max-file-size> <!-- 1MB -->
-			<max-request-size>10485760</max-request-size> <!-- 10MB -->
+			<max-file-size>1048576</max-file-size>
+			<max-request-size>10485760</max-request-size>
 		</multipart-config>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>WriteController</servlet-name>
 		<url-pattern>/mvcboard/write.do</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<description></description>
+		<display-name>ViewController</display-name>
+		<servlet-name>ViewController</servlet-name>
+		<servlet-class>model2.mvcboard.ViewController</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ViewController</servlet-name>
+		<url-pattern>/mvcboard/view.do</url-pattern>
 	</servlet-mapping>
 </web-app>
