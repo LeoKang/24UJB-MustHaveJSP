@@ -2,15 +2,17 @@ package fileupload;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.text.SimpleDateFormat;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.Part;
 
 public class FileUtil {
-	public static String uploadFile(HttpServletRequest req, String sDirectory) throws ServletException, IOException {
+	// 파일 업로드
+	public static String uploadFile(HttpServletRequest req, String sDirectory)
+					throws ServletException, IOException{
 		Part part = req.getPart("attachedFile");
 		String partHeader = part.getHeader("content-disposition");
 		String[] phArr = partHeader.split("filename=");
@@ -20,7 +22,7 @@ public class FileUtil {
 		}
 		return originalFileName;
 	}
-
+	// 파일명 변경
 	public static String renameFile(String sDirectory, String fileName) {
 		String ext = fileName.substring(fileName.lastIndexOf("."));
 		String now = new SimpleDateFormat("yyyyMMdd_HmsS").format(new Date());
