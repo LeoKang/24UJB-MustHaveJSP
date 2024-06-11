@@ -56,7 +56,7 @@
             <tr>
                 <td>첨부 파일</td>
                 <td>
-                    <input type="file" name="attachedFile"/>
+                    <input type="file" name="ofile"/>
                 </td>
             </tr>
             <tr>
