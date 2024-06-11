@@ -138,4 +138,18 @@ public class MVCBoardDAO extends DBConnPool {
 			e.printStackTrace();
 		}
 	}
+	
+	public void downCountPlus(String idx) {
+		String sql = "UPDATE mvcboard SET "
+				+ " downcount=downcount+1 "
+				+ " WHERE idx=?";
+		
+		try {
+			psmt = con.prepareStatement(sql);
+			psmt.setString(1, idx);
+			psmt.executeUpdate();
+		}catch(Exception e) {
+			
+		}
+	}
 }

@@ -1,18 +1,21 @@
 package fileupload;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Date;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 
 public class FileUtil {
-	// ÆÄÀÏ ¾÷·Îµå
-	public static String uploadFile(HttpServletRequest req, String sDirectory)
-					throws ServletException, IOException{
+	public static String uploadFile(HttpServletRequest req, String sDirectory) throws ServletException, IOException {
 		Part part = req.getPart("attachedFile");
 		String partHeader = part.getHeader("content-disposition");
 		String[] phArr = partHeader.split("filename=");
@@ -22,7 +25,7 @@ public class FileUtil {
 		}
 		return originalFileName;
 	}
-	// ÆÄÀÏ¸í º¯°æ
+
 	public static String renameFile(String sDirectory, String fileName) {
 		String ext = fileName.substring(fileName.lastIndexOf("."));
 		String now = new SimpleDateFormat("yyyyMMdd_HmsS").format(new Date());
@@ -32,5 +35,44 @@ public class FileUtil {
 		oldFile.renameTo(newFile);
 
 		return newFileName;
+	}
+
+	public static void download(HttpServletRequest req, HttpServletResponse resp, String directory, String sfileName,
+			String ofileName) {
+		String sDirectory = req.getServletContext().getRealPath(directory);
+
+		try {
+			File file = new File(sDirectory, sfileName);
+			InputStream iStream = new FileInputStream(file);
+
+			String client = req.getHeader("User-Agent");
+			if (client.indexOf("WOW64") == -1) {
+				ofileName = new String(ofileName.getBytes("UTF-8"), "ISO-8859-1");
+			} else {
+				ofileName = new String(ofileName.getBytes("KSC5601"), "ISO-8859-1");
+			}
+
+			resp.reset();
+			resp.setContentType("application/octet-stream");
+			resp.setHeader("Content-Disposition", "attachment; filename=\"" + ofileName + "\"");
+			resp.setHeader("Content-Length", "" + file.length());
+
+			OutputStream oStream = resp.getOutputStream();
+
+			byte b[] = new byte[(int) file.length()];
+			int readBuffer = 0;
+			while ((readBuffer = iStream.read(b)) > 0) {
+				oStream.write(b, 0, readBuffer);
+			}
+
+			iStream.close();
+			oStream.close();
+		} catch (FileNotFoundException e) {
+			System.out.println("íŒŒì¼ì„ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
+			e.printStackTrace();
+		} catch (Exception e) {
+			System.out.println("ì˜ˆì™¸ê°€ ë°œìƒí•˜ì˜€ìŠµë‹ˆë‹¤.");
+			e.printStackTrace();
+		}
 	}
 }
