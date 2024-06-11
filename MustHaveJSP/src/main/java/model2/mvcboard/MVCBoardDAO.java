@@ -16,7 +16,8 @@ public class MVCBoardDAO extends DBConnPool {
 
 		String query = "SELECT COUNT(*) FROM mvcboard";
 		if (map.get("searchWord") != null) {
-			query += " WHERE " + map.get("searchField") + " " + " LIKE '%" + map.get("searchWord") + "%'";
+			query += " WHERE " + map.get("searchField") + " "
+				   + " LIKE '%" + map.get("searchWord") + "%'";
 		}
 		try {
 			stmt = con.createStatement();
@@ -34,13 +35,19 @@ public class MVCBoardDAO extends DBConnPool {
 	public List<MVCBoardDTO> selectListPage(Map<String, Object> map) {
 		List<MVCBoardDTO> board = new Vector<MVCBoardDTO>();
 
-		String query = "" + " SELECT * FROM ( " + " SELECT Tb.*, ROWNUM rNum FROM ( " + " SELECT * FROM mvcboard ";
+		String query = "" + " SELECT * FROM ( "
+					+ " SELECT Tb.*, ROWNUM rNum FROM ( "
+					+ " SELECT * FROM mvcboard ";
 
 		if (map.get("searchWord") != null) {
-			query += " WHERE " + map.get("searchField") + " LIKE '%" + map.get("searchWord") + "%' ";
+			query += " WHERE " + map.get("searchField")
+				   + " LIKE '%" + map.get("searchWord") + "%' ";
 		}
 
-		query += " ORDER by idx DESC " + " ) Tb " + " ) " + " WHERE rNum BETWEEN ? AND ?";
+		query += " ORDER by idx DESC "
+			   + " ) Tb "
+			   + " ) "
+			   + " WHERE rNum BETWEEN ? AND ?";
 
 		try {
 			psmt = con.prepareStatement(query);
@@ -76,7 +83,9 @@ public class MVCBoardDAO extends DBConnPool {
 		int result = 0;
 
 		try {
-			String query = "INSERT INTO mvcboard ( " + " idx, name, title, content, ofile, sfile, pass) " + " VALUES( "
+			String query = "INSERT INTO mvcboard ( "
+					+ " idx, name, title, content, ofile, sfile, pass) "
+					+ " VALUES( "
 					+ " seq_board_num.NEXTVAL,?,?,?,?,?,?)";
 
 			psmt = con.prepareStatement(query);
@@ -98,13 +107,13 @@ public class MVCBoardDAO extends DBConnPool {
 	public MVCBoardDTO selectView(String idx) {
 		MVCBoardDTO dto = new MVCBoardDTO();
 		String query = "SELECT * FROM mvcboard WHERE idx=?";
-		
+
 		try {
 			psmt = con.prepareStatement(query);
 			psmt.setString(1, idx);
 			rs = psmt.executeQuery();
-			
-			if(rs.next()) {
+
+			if (rs.next()) {
 				dto.setIdx(rs.getString(1));
 				dto.setName(rs.getString(2));
 				dto.setTitle(rs.getString(3));
@@ -116,40 +125,77 @@ public class MVCBoardDAO extends DBConnPool {
 				dto.setPass(rs.getString(9));
 				dto.setVisitcount(rs.getInt(10));
 			}
-		}catch(Exception e) {
+		} catch (Exception e) {
 			System.out.println("게시물 상세보기 중 예외 발생");
 			e.printStackTrace();
 		}
-		
+
 		return dto;
 	}
-	
+
 	public void updateVisitCount(String idx) {
 		String query = "UPDATE mvcboard SET "
-				+ " visitcount=visitcount+1 "
-				+ " WHERE idx=?";
-		
+					+ " visitcount=visitcount+1 "
+					+ " WHERE idx=?";
+
 		try {
 			psmt = con.prepareStatement(query);
 			psmt.setString(1, idx);
 			psmt.executeQuery();
-		}catch(Exception e) {
+		} catch (Exception e) {
 			System.out.println("게시물 조회수 증가 중 예외 발생");
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void downCountPlus(String idx) {
 		String sql = "UPDATE mvcboard SET "
-				+ " downcount=downcount+1 "
-				+ " WHERE idx=?";
-		
+					+ " downcount=downcount+1 "
+					+ " WHERE idx=?";
+
 		try {
 			psmt = con.prepareStatement(sql);
 			psmt.setString(1, idx);
 			psmt.executeUpdate();
-		}catch(Exception e) {
-			
+		} catch (Exception e) {
+
 		}
+	}
+
+	public boolean confirmPassword(String pass, String idx) {
+		boolean isCorr = true;
+		
+		try {
+			String sql = "SELECT COUNT(*) FROM mvcboard WHERE pass=? AND idx=?";
+			psmt = con.prepareStatement(sql);
+			psmt.setString(1, pass);
+			psmt.setString(2, idx);
+			rs = psmt.executeQuery();
+			rs.next();
+			if(rs.getInt(1) == 0) {
+				isCorr = false;
+			}
+		}catch(Exception e) {
+			isCorr = false;
+			e.printStackTrace();
+		}
+		
+		return isCorr;
+	}
+	
+	public int deletePost(String idx) {
+		int result = 0;
+		
+		try {
+			String query = "DELETE FROM mvcboard WHERE idx=?";
+			psmt = con.prepareStatement(query);
+			psmt.setString(1, idx);
+			result = psmt.executeUpdate();
+		}catch(Exception e) {
+			System.out.println("게시물 삭제 중 예외 발생");
+			e.printStackTrace();
+		}
+		
+		return result;
 	}
 }
